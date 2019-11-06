@@ -1,0 +1,28 @@
+{
+  "name": "yarn-install-lock-only",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@yarnpkg/lockfile": "^1.1.0",
+    "debug": "^4.1.1",
+    "download": "^7.1.0",
+    "semver": "^6.3.0",
+    "ssri": "^7.1.0"
+  },
+  "devDependencies": {
+    "@types/download": "^6.2.4",
+    "@types/node": "^12.12.6",
+    "@types/semver": "^6.2.0",
+    "@types/ssri": "^6.0.1",
+    "@types/yarnpkg__lockfile": "^1.1.3",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.7.2"
+  }
+}
