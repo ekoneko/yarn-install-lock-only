@@ -1,6 +1,6 @@
-import { installLockOnly } from "./index";
 import * as path from "path";
 import * as fs from "fs";
+import { installLockOnly } from "./index";
 
 const tempDir = path.join(__dirname, "../temp");
 if (!fs.existsSync(tempDir)) {
