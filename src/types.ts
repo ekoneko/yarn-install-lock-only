@@ -3,14 +3,14 @@ export type Map<P> = { [key: string]: P };
 export type Version = string;
 export type Range = string;
 
-export interface Dependency {
+export interface Dependence {
   version: string;
   resolved: string;
   integrity: string;
   dependencies: Map<Range>;
 }
 
-export type YarnLock = Map<Dependency>;
+export type YarnLock = Map<Dependence>;
 
 export interface PkgInfo {
   name: string;

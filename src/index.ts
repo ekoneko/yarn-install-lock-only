@@ -1,6 +1,5 @@
-import * as path from "path";
 import * as fs from "fs";
-import { parseLockFile, recordLockFile } from "./lockParser";
+import { YarnLock } from "./YarnLock";
 import { install } from "./install";
 
 export const installLockOnly = (
@@ -12,18 +11,13 @@ export const installLockOnly = (
   const pkgContent = fs.readFileSync(srcPkgJsonPath, "utf8");
   const lockContent = fs.readFileSync(srcYarnLockPath, "utf8");
 
-  const srcPkgJson = JSON.parse(pkgContent);
-  const parsedYarnLock = parseLockFile(lockContent);
+  const pkgJson = JSON.parse(pkgContent);
+  const yarnLock = new YarnLock(lockContent, pkgJson);
 
   return async (pkgName: string, version = "latest") => {
-    const { pkgJson, yarnLock } = await install(
-      pkgName,
-      version,
-      parsedYarnLock,
-      srcPkgJson
-    );
+    await install(pkgName, version, yarnLock, pkgJson);
 
     fs.writeFileSync(distPkgJsonPath, JSON.stringify(pkgJson, undefined, 2));
-    fs.writeFileSync(distYarnLockPath, recordLockFile(yarnLock));
+    fs.writeFileSync(distYarnLockPath, yarnLock.toString());
   };
 };

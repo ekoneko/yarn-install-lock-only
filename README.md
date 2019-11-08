@@ -6,4 +6,4 @@ Yarn doesn't support the feature official([issue 6676](https://github.com/yarnpk
 
 This is a simple implement.
 
-NOTICE: I don't test all scenes, this project is work in progress.
+NOTICE: It doesn't anything for [resolutions](https://yarnpkg.com/lang/en/docs/selective-version-resolutions/) or [flat](https://yarnpkg.com/lang/en/docs/cli/install/#toc-yarn-install-flat)
