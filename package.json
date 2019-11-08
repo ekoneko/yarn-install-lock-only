@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
+  "bin": {
+    "yarn-install-lock-only": "./lib/cli.js"
+  },
   "scripts": {
-    "test": "DEBUG=yarn-install-lock-only ts-node src/index.test.ts"
+    "build": "tsc",
+    "test": "DEBUG=yarn-install-lock-only ts-node src/index.test.ts",
+    "release": "np"
   },
   "files": [
     "lib/"
@@ -16,12 +21,14 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "debug": "^4.1.1",
     "download": "^7.1.0",
+    "meow": "^5.0.0",
     "np": "^5.1.2",
     "semver": "^6.3.0",
     "ssri": "^7.1.0"
   },
   "devDependencies": {
     "@types/download": "^6.2.4",
+    "@types/meow": "^5.0.0",
     "@types/node": "^12.12.6",
     "@types/semver": "^6.2.0",
     "@types/ssri": "^6.0.1",

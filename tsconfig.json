@@ -5,6 +5,8 @@
     "experimentalDecorators": true,
     "declaration": true,
     "target": "esnext",
+    "moduleResolution": "node",
+    "module": "commonjs",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "skipLibCheck": true,
