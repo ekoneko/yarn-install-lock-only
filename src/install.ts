@@ -4,7 +4,8 @@ import * as semver from "semver";
 import { getPkgInfo, getMaxSatisfyingVersion } from "./yarn";
 import { Readable } from "stream";
 import { YarnLock } from "./YarnLock";
-import { Version, PkgJson, Dependence, Map, Range } from "./types";
+import { Version, Dependence, Map, Range } from "./types";
+const debug = require("debug")("yarn-install-lock-only");
 
 async function computeIntegrity(resource: string, algorithms = ["sha1"]) {
   const stream = (download(resource) as any) as Readable;
@@ -69,15 +70,21 @@ function bumpVersion(
 
 async function installDependencies(
   dependencies: Map<Range>,
-  yarnLock: YarnLock
+  yarnLock: YarnLock,
+  ref: string
 ) {
   const installList: { name: string; version: Version }[] = [];
   const names = Object.keys(dependencies);
   const handlers = names.map(async name => {
     const range = dependencies[name];
     const versions = yarnLock.getAllVersions(name);
-    if (semver.maxSatisfying(versions, range)) {
-      // skip
+    const version = semver.maxSatisfying(versions, range);
+    if (yarnLock.getRange(name)[range]) {
+      yarnLock.addRef(name, range, ref);
+      return;
+    }
+    if (version) {
+      yarnLock.link(name, range, version);
       return;
     }
     const satisfyingVersion = await getMaxSatisfyingVersion(name, range);
@@ -93,30 +100,34 @@ export async function install(
   pkgName: string,
   pkgVersion: string = "latest",
   yarnLock: YarnLock,
-  pkgJson?: PkgJson
+  updatePackageJson = false
 ) {
+  debug(`[install]${pkgName}@${pkgVersion}`);
   const pkgInfo = await getPkg(pkgName, pkgVersion);
+  debug(`[install]real version is ${pkgInfo.version}`);
 
   // TODO: difference with version, range or dist tag
-  if (pkgJson && pkgJson.dependencies && pkgJson.dependencies[pkgName]) {
-    pkgJson.dependencies[pkgName] = `^${pkgInfo.version}`;
-  } else if (
-    pkgJson &&
-    pkgJson.devDependencies &&
-    pkgJson.devDependencies[pkgName]
-  ) {
-    pkgJson.devDependencies[pkgName] = `^${pkgInfo.version}`;
-  }
+  const range = `^${pkgInfo.version}`;
 
   if (yarnLock.getVersion(pkgName, pkgInfo.version)) {
     // the special version has been existed, skip
+    if (updatePackageJson) {
+      yarnLock.upgradePackageJson(pkgName, range);
+    }
     return;
   }
 
-  yarnLock.add(pkgName, pkgInfo, `^${pkgInfo.version}`);
-  // bump other ranges
-  bumpVersion(pkgName, pkgInfo, yarnLock);
+  yarnLock.add(pkgName, pkgInfo, range);
   if (pkgInfo.dependencies) {
-    await installDependencies(pkgInfo.dependencies, yarnLock);
+    await installDependencies(
+      pkgInfo.dependencies,
+      yarnLock,
+      `${pkgName}@${range}`
+    );
+  }
+  bumpVersion(pkgName, pkgInfo, yarnLock);
+
+  if (updatePackageJson) {
+    yarnLock.upgradePackageJson(pkgName, range);
   }
 }

@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import { installLockOnly } from "./index";
+import installLockOnly from "./index";
 
 const tempDir = path.join(__dirname, "../temp");
 if (!fs.existsSync(tempDir)) {
@@ -13,6 +13,6 @@ const distLockPath = path.join(tempDir, "yarn.lock");
 const distPkgPath = path.join(tempDir, "package.json");
 
 installLockOnly(srcPkgPath, srcLockPath, distPkgPath, distLockPath)(
-  "color",
+  "@shimo/lc-file-header",
   "latest"
 );

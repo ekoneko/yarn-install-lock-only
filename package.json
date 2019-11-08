@@ -4,7 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "test": "ts-node src/index.test.ts"
+    "test": "DEBUG=yarn-install-lock-only ts-node src/index.test.ts"
   },
   "files": [
     "lib/"
@@ -16,6 +16,7 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "debug": "^4.1.1",
     "download": "^7.1.0",
+    "np": "^5.1.2",
     "semver": "^6.3.0",
     "ssri": "^7.1.0"
   },

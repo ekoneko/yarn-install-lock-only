@@ -1,9 +1,126 @@
 {
-  "name": "test",
+  "name": "@shimo/lizard-service-doc",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "description": "",
+  "author": "yangjunbao <yangjunbao@shimo.im>",
+  "private": true,
+  "sideEffects": [
+    "*.css",
+    "*.less",
+    "*.scss"
+  ],
+  "scripts": {
+    "preinstall": "node ./scripts/check-install.js",
+    "build": "npm run clean && NODE_ENV=${NODE_ENV:-production} NODE_BUILD_TARGET=${NODE_BUILD_TARGET:-release} webpack-cli --env.cli",
+    "build:lizard-local-view": "NODE_DEPLOY_TARGET=lizard-local-view npm run build",
+    "clean": "rm -rf cjs esm build temp .cache",
+    "start": "NODE_BUILD_CACHE=off npm run start:fast",
+    "start:clean": "npm run clean && npm run start:fast",
+    "start:fast": "NODE_ENV=${NODE_ENV:-development} NODE_BUILD_TARGET=${NODE_BUILD_TARGET:-develop} webpack-dev-server --progress --color --env.devServer",
+    "analyze": "NODE_BUNDLE_ANALYZE=1 TEMP_OSS_ENABLE= TEMP_SENTRY_ENABLE= TEMP_LIZARD_VIEW_INFO_FILE= npm run build",
+    "test": "echo Done",
+    "check-build-version": "./check-build-version.sh",
+    "check-git": "./check-git.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.shimo.im:shimo/lizard-service-doc.git"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@shimo/web-starter-build": "^7.22.7",
+    "@shimo/web-starter-runtime": "^7.12.1",
+    "@types/node": "^8.10.55",
+    "babel-loader": "^7.1.5",
+    "event-stream": "3.3.4",
+    "hoist-non-react-statics": "^3.3.0",
+    "husky": "^1.2.1",
+    "lint-staged": "^8.1.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.15.3",
+    "typescript": "^3.6.4",
+    "webpack-merge": "^4.1.4"
+  },
   "dependencies": {
-    "color": "^2.0.0"
+    "@shimo/ad-platform-sdk": "^1.0.27",
+    "@shimo/collaborators-client": "^1.2.2",
+    "@shimo/common": "^2.6.16",
+    "@shimo/common-js": "^1.0.53",
+    "@shimo/intercom": "^1.2.7",
+    "@shimo/lc-download": "^1.2.4",
+    "@shimo/lc-feedback": "^1.1.6",
+    "@shimo/lc-file-create": "^1.0.8",
+    "@shimo/lc-file-header": "^1.1.34",
+    "@shimo/lc-file-loader": "^1.2.7",
+    "@shimo/lc-file-menu": "^1.1.10",
+    "@shimo/lc-file-move": "^1.1.7",
+    "@shimo/lc-file-report": "^1.1.4",
+    "@shimo/lc-file-search": "^1.2.5",
+    "@shimo/lc-file-share": "^1.0.8",
+    "@shimo/lc-file-template": "^1.1.5",
+    "@shimo/lc-marketing": "^1.1.6",
+    "@shimo/lc-shortcuts": "^1.1.4",
+    "@shimo/lc-startup": "^1.2.6",
+    "@shimo/lc-userguide": "^1.1.4",
+    "@shimo/lc-usermenu": "^1.2.6",
+    "@shimo/lc-utils": "^1.4.8",
+    "@shimo/lizard-components": "^5.28.5",
+    "@shimo/sdk-common-collaboration": "^0.17.3",
+    "@shimo/simple-i18n": "^1.0.0",
+    "@shimo/sos": "^1.16.6",
+    "@shimo/text-counter": "^0.1.6",
+    "@shimo/ui": "^5.7.23",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.3",
+    "@types/react-loadable": "^5.5.2",
+    "@types/react-redux": "^7.1.5",
+    "@types/react-router": "^5.1.2",
+    "@types/react-router-dom": "^5.1.1",
+    "es6-promise": "^4.2.5",
+    "jquery": "^3.3.1",
+    "loadsh": "0.0.3",
+    "mobx": "^4.2.0",
+    "mobx-react": "^5.0.0",
+    "monofile-utilities": "^4.5.0",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-loadable": "^5.5.0",
+    "react-redux": "^5.1.2",
+    "react-router": "^5.0.1",
+    "react-router-dom": "^5.0.1",
+    "redux": "^4.0.4",
+    "shimo-sos-localstorage": "^1.1.0",
+    "styled-components": "^2.4.1",
+    "tslib": "^1.10.0",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm run check-git && ./scripts/check-nested-dependencies.sh",
+      "pre-push": "npm run check-build-version"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,less,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "printWidth": 80,
+    "tabWidth": 2,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "jsxSingleQuote": false,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "jsxBracketSameLine": false,
+    "arrowParens": "always",
+    "endOfLine": "lf"
+  },
+  "resolutions": {
+    "@shimo/modoc": "^1.1.0",
+    "@shimo/runtime-env": "^1.1.2"
   }
 }

@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { YarnLock } from "./YarnLock";
 import { install } from "./install";
 
-export const installLockOnly = (
+export default (
   srcPkgJsonPath: string,
   srcYarnLockPath: string,
   distPkgJsonPath = srcPkgJsonPath,
@@ -15,9 +15,9 @@ export const installLockOnly = (
   const yarnLock = new YarnLock(lockContent, pkgJson);
 
   return async (pkgName: string, version = "latest") => {
-    await install(pkgName, version, yarnLock, pkgJson);
+    await install(pkgName, version, yarnLock, true);
 
-    fs.writeFileSync(distPkgJsonPath, JSON.stringify(pkgJson, undefined, 2));
+    fs.writeFileSync(distPkgJsonPath, yarnLock.stringifyPackageJson());
     fs.writeFileSync(distYarnLockPath, yarnLock.toString());
   };
 };
