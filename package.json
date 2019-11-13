@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "test": "DEBUG=yarn-install-lock-only ts-node src/index.test.ts",
-    "release": "np"
+    "release": "np --no-tests"
   },
   "files": [
     "lib/"
@@ -37,6 +37,6 @@
     "typescript": "^3.7.2"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/ekoneko"
+    "registry": "https://npm.pkg.github.com"
   }
 }
