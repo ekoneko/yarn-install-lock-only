@@ -12,7 +12,9 @@ const srcPkgPath = path.join(__dirname, "../resources/package.json");
 const distLockPath = path.join(tempDir, "yarn.lock");
 const distPkgPath = path.join(tempDir, "package.json");
 
-installLockOnly(srcPkgPath, srcLockPath, distPkgPath, distLockPath)(
-  "@shimo/lc-file-header",
-  "latest"
-);
+installLockOnly(
+  srcPkgPath,
+  srcLockPath,
+  distPkgPath,
+  distLockPath
+)("color", "latest");

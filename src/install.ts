@@ -109,14 +109,6 @@ export async function install(
   // TODO: difference with version, range or dist tag
   const range = `^${pkgInfo.version}`;
 
-  if (yarnLock.getVersion(pkgName, pkgInfo.version)) {
-    // the special version has been existed, skip
-    if (updatePackageJson) {
-      yarnLock.upgradePackageJson(pkgName, range);
-    }
-    return;
-  }
-
   yarnLock.add(pkgName, pkgInfo, range);
   if (pkgInfo.dependencies) {
     await installDependencies(
