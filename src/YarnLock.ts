@@ -110,6 +110,8 @@ export class YarnLock {
     if (!ranges.includes(range)) {
       ranges.push(range);
     }
+    this.dependedMap[pkgName][range] = this.dependedMap[pkgName][range] || [];
+    this.dependedMap[pkgName][range].push(ROOT_REF);
   }
 
   public upgrade(name: string, range: Range, dependence: Dependence) {
@@ -204,12 +206,17 @@ export class YarnLock {
   public upgradePackageJson(name: string, range: Range) {
     if (
       this.packageJson.devDependencies &&
-      this.packageJson.devDependencies[name]
+      this.packageJson.devDependencies[name] &&
+      this.packageJson.devDependencies[name] !== range
     ) {
       this.unlink(name, this.packageJson.devDependencies[name], ROOT_REF);
       this.packageJson.devDependencies[name] = range;
     }
-    if (this.packageJson.dependencies && this.packageJson.dependencies[name]) {
+    if (
+      this.packageJson.dependencies &&
+      this.packageJson.dependencies[name] &&
+      this.packageJson.dependencies[name] !== range
+    ) {
       this.unlink(name, this.packageJson.dependencies[name], ROOT_REF);
       this.packageJson.dependencies[name] = range;
     }
