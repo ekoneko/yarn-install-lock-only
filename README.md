@@ -1,4 +1,4 @@
-# \[WIP\]Yarn install --lock-only
+# Yarn install --lock-only
 
 Look like `npm install --package-lock-only`
 
@@ -19,4 +19,11 @@ installLockOnly(
   OUTPUT_YARN_LOCK_PATH,
   OUTPUT_PACKAGE_JSON_PATH
 )("color", "latest");
+```
+
+## CLI
+
+```
+yarn global add @ekoneko/yarn-install-lock-only
+yarn-install-lock-only <module> [range]
 ```
