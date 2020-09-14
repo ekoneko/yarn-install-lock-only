@@ -185,6 +185,9 @@ export class YarnLock {
 
   public addRef(name: string, range: Range, ref: string) {
     debug(`[add ref]${ref} to ${name}@${range}`);
+    if (!this.dependedMap[name][range]) {
+      this.dependedMap[name][range] = [];
+    }
     const refs = this.dependedMap[name][range];
     if (!refs.includes(ref)) {
       refs.push(ref);
