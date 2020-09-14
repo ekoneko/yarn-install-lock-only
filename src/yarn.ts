@@ -9,16 +9,16 @@ async function execute(script: string, options?: childProcess.ExecOptions) {
     const handler = childProcess.exec(script, options);
     let result = "";
     let error = "";
-    handler.stdout.on("data", chunk => {
+    handler.stdout.on("data", (chunk) => {
       result += chunk;
     });
-    handler.stderr.on("data", chunk => {
+    handler.stderr.on("data", (chunk) => {
       error += chunk;
     });
     handler.on("close", () => {
       resolve(result);
     });
-    handler.on("error", err => {
+    handler.on("error", (err) => {
       debug(error);
       reject(err);
     });

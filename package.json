@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "watch": "tsc -w --sourceMap",
     "test": "DEBUG=yarn-install-lock-only ts-node src/index.test.ts",
     "release": "np --no-tests"
   },

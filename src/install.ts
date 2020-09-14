@@ -45,7 +45,7 @@ export async function getPkg(
     version: pkgInfo.version,
     resolved: `${pkgInfo.dist.tarball}#${pkgInfo.dist.shasum}`,
     integrity: integrity.toString(),
-    dependencies: pkgInfo.dependencies
+    dependencies: pkgInfo.dependencies,
   };
   return dependence;
 }
@@ -75,14 +75,14 @@ async function installDependencies(
 ) {
   const installList: { name: string; version: Version }[] = [];
   const names = Object.keys(dependencies);
-  const handlers = names.map(async name => {
+  const handlers = names.map(async (name) => {
     const range = dependencies[name];
-    const versions = yarnLock.getAllVersions(name);
-    const version = semver.maxSatisfying(versions, range);
     if (yarnLock.getRange(name)[range]) {
       yarnLock.addRef(name, range, ref);
       return;
     }
+    const versions = yarnLock.getAllVersions(name);
+    const version = semver.maxSatisfying(versions, range);
     if (version) {
       yarnLock.link(name, range, version);
       return;
@@ -107,7 +107,8 @@ export async function install(
   debug(`[install]real version is ${pkgInfo.version}`);
 
   // TODO: difference with version, range or dist tag
-  const range = `^${pkgInfo.version}`;
+  const range =
+    pkgVersion === "latest" ? `^${pkgInfo.version}` : pkgInfo.version;
 
   yarnLock.add(pkgName, pkgInfo, range);
   if (pkgInfo.dependencies) {
