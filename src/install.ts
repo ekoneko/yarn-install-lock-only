@@ -63,7 +63,7 @@ function bumpVersion(
       semver.maxSatisfying([version, dependence.version], range) ===
         dependence.version
     ) {
-      yarnLock.upgrade(pkgName, range, dependence);
+      yarnLock.upgradeRef(pkgName, range, dependence);
     }
   }
 }
@@ -106,7 +106,6 @@ export async function install(
   const pkgInfo = await getPkg(pkgName, pkgVersion);
   debug(`[install]real version is ${pkgInfo.version}`);
 
-  // TODO: difference with version, range or dist tag
   const range =
     pkgVersion === "latest" ? `^${pkgInfo.version}` : pkgInfo.version;
 

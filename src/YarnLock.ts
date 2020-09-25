@@ -40,29 +40,29 @@ export class YarnLock {
 
   public parse(content: string) {
     this.data = lockfile.parse(content).object;
-    const dependenciesNames = Object.keys(this.data);
+    const dependencyNames = Object.keys(this.data);
 
-    dependenciesNames.forEach((dependenciesName) => {
-      const [_, name, range] = dependenciesName.match(/^(.+?)@(.+)$/);
-      const version = this.data[dependenciesName].version;
+    dependencyNames.forEach((dependencyName) => {
+      const [_, name, range] = dependencyName.match(/^(.+?)@(.+)$/);
+      const version = this.data[dependencyName].version;
       this.dependenceRangeMap[name] = this.dependenceRangeMap[name] || {};
       this.dependenceRangeMap[name][range] = {
         version,
-        ref: dependenciesName,
+        ref: dependencyName,
       };
       this.dependenceVersionMap[name] = this.dependenceVersionMap[name] || {};
       this.dependenceVersionMap[name][version] =
         this.dependenceVersionMap[name][version] || [];
       this.dependenceVersionMap[name][version].push(range);
 
-      const { dependencies } = this.data[dependenciesName];
+      const { dependencies } = this.data[dependencyName];
       if (dependencies) {
         const dependenceKeys = Object.keys(dependencies);
         for (let key of dependenceKeys) {
           const range = dependencies[key];
           this.dependedMap[key] = this.dependedMap[key] || {};
           this.dependedMap[key][range] = this.dependedMap[key][range] || [];
-          this.dependedMap[key][range].push(dependenciesName);
+          this.dependedMap[key][range].push(dependencyName);
         }
       }
     });
@@ -85,6 +85,9 @@ export class YarnLock {
   }
 
   public getVersion(pkgName: string, version: Version) {
+    if (!this.dependenceVersionMap[pkgName]) {
+      return [];
+    }
     return this.dependenceVersionMap[pkgName][version];
   }
 
@@ -97,19 +100,17 @@ export class YarnLock {
   }
 
   public getRange(pkgName: string) {
-    if (!this.dependenceRangeMap[pkgName]) {
-      this.dependenceRangeMap[pkgName] = {};
-    }
-    return this.dependenceRangeMap[pkgName];
+    return this.dependenceRangeMap[pkgName] || {};
   }
 
   public add(pkgName: string, dependence: Dependence, range: Range) {
     const ref = `${pkgName}@${range}`;
+    debug(`[add]begin add ${ref}`);
     if (this.data[ref]) {
       // skip
+      debug(`[add]${ref} exists, skip`);
       return;
     }
-    debug(`[add]${ref} to ${dependence.version}`);
     this.data[ref] = dependence;
     this.dependenceRangeMap[pkgName] = this.dependenceRangeMap[pkgName] || {};
     this.dependenceRangeMap[pkgName][range] = {
@@ -130,9 +131,9 @@ export class YarnLock {
     this.dependedMap[pkgName][range].push(ROOT_REF);
   }
 
-  public upgrade(name: string, range: Range, dependence: Dependence) {
+  public upgradeRef(name: string, range: Range, dependence: Dependence) {
     const ref = `${name}@${range}`;
-    debug(`[upgrade]${ref} to ${dependence.version}`);
+    debug(`[upgrade ref]${ref} to ${dependence.version}`);
 
     if (this.data[ref].dependencies) {
       const depNames = Object.keys(this.data[ref].dependencies);
