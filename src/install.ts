@@ -4,7 +4,7 @@ import * as semver from "semver";
 import { getPkgInfo, getMaxSatisfyingVersion } from "./yarn";
 import { Readable } from "stream";
 import { YarnLock } from "./YarnLock";
-import { Version, Dependence, Map, Range } from "./types";
+import { Version, Dependence, Range } from "./types";
 const debug = require("debug")("yarn-install-lock-only");
 
 async function computeIntegrity(resource: string, algorithms = ["sha1"]) {
@@ -16,7 +16,7 @@ interface Pkg {
   version: string;
   resolved: string;
   integrity: string;
-  dependencies: Map<string>;
+  dependencies: Record<string, string>;
 }
 
 export async function getPkg(
@@ -69,7 +69,7 @@ function bumpVersion(
 }
 
 async function installDependencies(
-  dependencies: Map<Range>,
+  dependencies: Record<string, Range>,
   yarnLock: YarnLock,
   ref: string
 ) {

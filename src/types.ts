@@ -1,5 +1,3 @@
-export type Map<P> = { [key: string]: P };
-
 export type Version = string;
 export type Range = string;
 
@@ -7,17 +5,17 @@ export interface Dependence {
   version: string;
   resolved: string;
   integrity: string;
-  dependencies: Map<Range>;
+  dependencies: Record<string, Range>;
 }
 
-export type YarnLock = Map<Dependence>;
+export type YarnLock = Record<string, Dependence>;
 
 export interface PkgInfo {
   name: string;
   version: string;
-  dependencies: Map<Range>;
+  dependencies: Record<string, Range>;
   versions: string[];
-  "dist-tags": Map<string>;
+  "dist-tags": Record<string, string>;
   dist: {
     shasum: string;
     size: number;
@@ -29,6 +27,6 @@ export interface PkgInfo {
 export interface PkgJson {
   name: string;
   version: string;
-  dependencies: Map<string>;
-  devDependencies: Map<string>;
+  dependencies: Record<string, string>;
+  devDependencies: Record<string, string>;
 }

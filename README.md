@@ -2,7 +2,7 @@
 
 Look like `npm install --package-lock-only`
 
-Yarn doesn't support the feature official([issue 6676](https://github.com/yarnpkg/yarn/issues/6676)).
+Yarn doesn't support the feature official([issue 5738](https://github.com/yarnpkg/yarn/issues/5738)).
 
 This is a simple implement.
 

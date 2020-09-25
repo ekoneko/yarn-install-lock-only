@@ -1,7 +1,6 @@
 import * as lockfile from "@yarnpkg/lockfile";
 import {
   YarnLock as YarnLockType,
-  Map,
   Range,
   Version,
   Dependence,
@@ -9,17 +8,21 @@ import {
 } from "./types";
 const debug = require("debug")("yarn-install-lock-only");
 
-type DependenceRangeMap = Map<
-  Map<{
-    version: Version;
-    ref: string;
-  }>
+type DependenceRangeMap = Record<
+  string,
+  Record<
+    string,
+    {
+      version: Version;
+      ref: string;
+    }
+  >
 >;
 
-type DependenceVersionMap = Map<Map<Range[]>>;
+type DependenceVersionMap = Record<string, Record<string, Range[]>>;
 
 // {pkgName: {range: ref[] }}
-type DependedMap = Map<Map<string[]>>;
+type DependedMap = Record<string, Record<string, string[]>>;
 
 const ROOT_REF = "package.json";
 
