@@ -1,5 +1,5 @@
 {
-  "name": "@ekoneko/yarn-install-lock-only",
+  "name": "yarn-install-lock-only",
   "version": "1.0.7",
   "description": "",
   "main": "lib/index.js",
