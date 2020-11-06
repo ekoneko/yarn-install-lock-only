@@ -68,6 +68,10 @@ function bumpVersion(
   }
 }
 
+function isTag(version: string) {
+  return /[a-z]/i.test(version[0]);
+}
+
 async function installDependencies(
   dependencies: Record<string, Range>,
   yarnLock: YarnLock,
@@ -107,7 +111,9 @@ export async function install(
   debug(`[install]real version is ${pkgInfo.version}`);
 
   const range =
-    pkgVersion === "latest" ? `^${pkgInfo.version}` : pkgInfo.version;
+    isTag(pkgVersion)
+      ? `^${pkgInfo.version}`
+      : pkgVersion;
 
   yarnLock.add(pkgName, pkgInfo, range);
   if (pkgInfo.dependencies) {
