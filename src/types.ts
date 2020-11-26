@@ -1,5 +1,6 @@
 export type Version = string;
 export type Range = string;
+export type NameAtRange = string;
 
 export interface Dependence {
   version: string;
@@ -8,7 +9,7 @@ export interface Dependence {
   dependencies: Record<string, Range>;
 }
 
-export type YarnLock = Record<string, Dependence>;
+export type YarnLock = Record<NameAtRange, Dependence>;
 
 export interface PkgInfo {
   name: string;

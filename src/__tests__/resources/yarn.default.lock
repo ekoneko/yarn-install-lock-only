@@ -1,0 +1,11 @@
+"@fake/a@^1.0.0":
+  version "1.0.0"
+  resolved ""
+  integrity ""
+  dependencies:
+    "@fake/b" "^1.0.0"
+
+"@fake/b@^1.0.0":
+  version "1.0.0"
+  resolved ""
+  integrity ""

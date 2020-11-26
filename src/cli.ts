@@ -1,4 +1,4 @@
-import * as meow from "meow";
+import meow from "meow";
 import * as path from "path";
 import install from "./index";
 
@@ -14,9 +14,11 @@ if (cli.input.length < 1) {
   cli.showHelp();
 }
 
+const develop = !!(cli.flags.D || cli.flags.dev);
 const [pkgName, range = "latest"] = cli.input;
 
-const yarnLockPath = path.join(process.cwd(), "yarn.lock");
-const pkgJsonPath = path.join(process.cwd(), "package.json");
+const basePath = process.cwd();
+const yarnLockPath = path.join(basePath, "yarn.lock");
+const pkgJsonPath = path.join(basePath, "package.json");
 
-install(pkgJsonPath, yarnLockPath)(pkgName, range);
+install(pkgJsonPath, yarnLockPath)(pkgName, range, { develop });

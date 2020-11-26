@@ -1,6 +1,9 @@
 import * as childProcess from "child_process";
-import { PkgInfo } from "./types";
-import * as semver from "semver";
+import { fromStream } from "ssri";
+import { maxSatisfying } from "semver";
+import { Readable } from "stream";
+import download from "download";
+import { Dependence, PkgInfo } from "./types";
 const debug = require("debug")("yarn-install-lock-only");
 
 async function execute(script: string, options?: childProcess.ExecOptions) {
@@ -25,15 +28,50 @@ async function execute(script: string, options?: childProcess.ExecOptions) {
   });
 }
 
-export async function getPkgInfo(name: string, version?: string) {
-  const result = await execute(
-    `yarn info ${name}@${version || "latest"} --json`
-  );
-  return JSON.parse(result).data as PkgInfo;
+async function computeIntegrity(resource: string, algorithms = ["sha1"]) {
+  const stream = (download(resource) as unknown) as Readable;
+  const integrity = await fromStream(stream, { algorithms });
+  return integrity.toString();
 }
 
-export async function getMaxSatisfyingVersion(name: string, range: string) {
-  const data = await execute(`yarn info ${name}@${range} --json`);
-  const result = JSON.parse(data).data as PkgInfo;
-  return semver.maxSatisfying(result.versions, range);
+function getRange(scope: string, info: PkgInfo) {
+  if (/[a-z]/i.test(scope[0])) {
+    const version = info["dist-tags"][scope];
+    return `^${version}`;
+  }
+  return scope;
+}
+
+async function requestPkgInfo(name: string, scope: string = "latest") {
+  const result = await execute(`yarn info ${name}@${scope} --json`);
+  const data: PkgInfo = JSON.parse(result).data;
+  const range = getRange(scope, data);
+  if (!data.dist) {
+    const satisfyingVersion = maxSatisfying(data.versions, range);
+    const result = await execute(`yarn info ${name}@${satisfyingVersion} --json`);
+    const info: PkgInfo = JSON.parse(result).data;
+    const dependence: Dependence = {
+      version: info.version,
+      resolved: `${info.dist.tarball}#${info.dist.shasum}`,
+      integrity: await computeIntegrity(info.dist.tarball),
+      dependencies: info.dependencies,
+    };
+    return { dependence, range };
+  }
+  const dependence: Dependence = {
+    version: data.version,
+    resolved: `${data.dist.tarball}#${data.dist.shasum}`,
+    integrity: await computeIntegrity(data.dist.tarball),
+    dependencies: data.dependencies,
+  };
+  return { dependence, range };
+}
+
+export async function getPkgInfo(name: string, scope: string = "latest") {
+  try {
+    return requestPkgInfo(name, scope);
+  } catch (err: unknown) {
+    // TODO: friendly error
+    throw new Error(`Get ${name}@${scope} failed: ${err}`);
+  }
 }

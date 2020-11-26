@@ -1,0 +1,70 @@
+{
+  "@fake/a": {
+    "versions": {
+      "1.0.0": {
+        "dependencies": {
+          "@fake/b": "^1.0.0"
+        }
+      },
+      "1.0.1": {
+        "dependencies": {
+          "@fake/b": "^1.0.1"
+        }
+      },
+      "1.1.0": {
+        "dependencies": {
+          "@fake/b": "^1.1.0"
+        }
+      },
+      "2.0.0": {}
+    },
+    "dist-tags": {
+      "latest": "1.1.0",
+      "next": "2.0.0"
+    }
+  },
+  "@fake/b": {
+    "versions": {
+      "1.0.0": {
+        "dependencies": {}
+      },
+      "1.0.1": {
+        "dependencies": {}
+      },
+      "1.1.0": {
+        "dependencies": {}
+      }
+    },
+    "dist-tags": {
+      "latest": "1.1.0"
+    }
+  },
+  "@fake/c": {
+    "versions": {
+      "1.0.0": {
+        "dependencies": {}
+      }
+    },
+    "dist-tags": {
+      "latest": "1.0.0"
+    }
+  },
+  "@fake/d": {
+    "versions": {
+      "1.0.0": {
+        "dependencies": {
+          "@fake/a": "1.0.1"
+        }
+      },
+      "1.0.1": {},
+      "1.1.0": {
+        "dependencies": {
+          "@fake/a": "2.0.0"
+        }
+      }
+    },
+    "dist-tags": {
+      "latest": "1.1.0"
+    }
+  }
+}
