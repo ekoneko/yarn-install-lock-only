@@ -25,7 +25,7 @@
     "download": "^7.1.0",
     "meow": "^8.0.0",
     "semver": "^6.3.0",
-    "ssri": "^7.1.0"
+    "ssri": "^8.0.1"
   },
   "devDependencies": {
     "@types/download": "^6.2.4",
